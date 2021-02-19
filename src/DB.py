@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 18:33:51
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-19 12:40:31
+# @Last Modified time: 2021-02-19 13:48:23
 
 
 # Main class to read the DB and obtain processed dataframe
@@ -59,6 +59,33 @@ class DB:
 		topusers = df["user_id"].tolist()
 
 		return topusers
+
+	def getrating(self):
+		"""
+		Get the user id and all ratings of all places visited.
+		For cases where user gives multiple ratings to the same venue, the average of these ratings is used. 
+		Returns:
+		    df (pandas dataframe): 
+		"""
+
+		query = """select C.user_id, C.venue_id , R.Rating
+					from 
+					(
+					select user_id, venue_id, max(created_at)
+					from checkins
+					group by user_id, venue_id) C
+					left join
+					(
+					select user_id, venue_id, avg(rating) as Rating from ratings 
+					group by user_id, venue_id
+					) R
+					where  C.user_id = R.user_id and C.venue_id  = R.venue_id"""
+
+		df = pd.read_sql_query(query, self.conn)
+
+		# TODO: Convert to matrix 
+
+		return df
 
 	def close(self):
 		"""
