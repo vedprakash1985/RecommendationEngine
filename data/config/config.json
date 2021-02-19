@@ -1,0 +1,4 @@
+{
+	"topUsers": 10,
+	"DB_path": "../data/fsdata.db"
+}
