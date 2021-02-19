@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 10:48:30
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-19 12:41:22
+# @Last Modified time: 2021-02-19 17:48:48
 
 # Main Script to run for Questions 1 ans 2 in Outline
 
@@ -28,11 +28,15 @@ def getVenues(config):
 	db = DB(config["DB_path"], top = config["topUsers"])
 	topusers = db.getTopUsers()
 
-	# Construct Similarity matrix for top users
-
+	# Get the user-item matrix, with the row column mapping
+	[row_col_map, X] = db.getUserItemMatrix()
 
 	# Close the DB connection
 	db.close()
+
+	# Construct Similarity matrix for top users based on cosine similarity of user-item matrix
+
+
 
 
 
