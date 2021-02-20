@@ -2,12 +2,13 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 18:33:51
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 04:11:06
+# @Last Modified time: 2021-02-21 04:42:06
 
 
 # Main class to read the DB and obtain processed dataframe
 import sqlite3
 import pandas as pd
+import numpy as np
 from scipy.sparse import lil_matrix
 
 
@@ -162,7 +163,10 @@ class DB:
 				pass
 				# print("User %i did not make any checkins" %row["friend_id"] )
 
-		S = S.tocsr()  
+		for i in range(len(self.topusers)):
+			S[i, column_map[self.topusers[i]]]  = S[i, column_map[self.topusers[i]]]  +1
+
+		S = S.tocsr()
 
 		return S
 

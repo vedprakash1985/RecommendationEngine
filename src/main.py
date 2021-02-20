@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 10:48:30
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 04:03:17
+# @Last Modified time: 2021-02-21 04:24:37
 
 # Main Script to run for Questions 1 ans 2 in Outline
 
@@ -135,11 +135,17 @@ def getVenues(config):
 	R_social = recommenMatrix(S_social, X)
 
 
-	# Get the recommendations for each user
+	# Get the recommendations for each user using user similarity method
 	new_venues = getNewVenues(R_cosine, X_top, config["numberRecommendation"], row_col_map, topusers)
-
 	# Format and save to disk
 	savedisk(new_venues, config['loc_recom_venues'])
+
+	# Get the recommendations for each user using social network
+	new_venues_social = getNewVenues(R_social, X_top, config["numberRecommendation"], row_col_map, topusers)
+	# Format and save to disk
+	savedisk(new_venues_social, config['loc_recom_social_venues'])
+
+
 
 	return None
 
