@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 18:33:51
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-19 17:36:32
+# @Last Modified time: 2021-02-21 02:54:40
 
 
 # Main class to read the DB and obtain processed dataframe
@@ -22,6 +22,9 @@ class DB:
 
 		# Create the connection to DB
 		self.conn = sqlite3.connect(filename)
+
+		# Get the top users
+		self.getTopUsers()
 
 
 	def getTopUsers(self): 
@@ -57,16 +60,14 @@ class DB:
 
 		df = pd.read_sql_query(query, self.conn)
 
-		topusers = df["user_id"].tolist()
-
-		return topusers
+		self.topusers = df["user_id"].tolist()
 
 	def getrating(self):
 		"""
 		Get the user id and all ratings of all places visited.
 		For cases where user gives multiple ratings to the same venue, the average of these ratings is used. 
 		Returns:
-			df (pandas dataframe): 
+			df (pandas dataframe): Columns are user_id, venue_id and rating
 		"""
 
 		query = """select C.user_id, C.venue_id , R.Rating
@@ -81,6 +82,22 @@ class DB:
 					group by user_id, venue_id
 					) R
 					where  C.user_id = R.user_id and C.venue_id  = R.venue_id"""
+
+		df = pd.read_sql_query(query, self.conn)
+
+		return df
+
+	def getSocialNetwork(self):
+		"""
+		Get the friends of all top users with their weights
+		Returns:
+		    df (pandas dataframe): Columns are top_user_id, friend_id, weight
+		"""
+
+		query = """select first_user_id as top_user_id, second_user_id as friend_id, count(*) 
+						as weight from socialgraph
+						where first_user_id in {}
+						group by first_user_id, second_user_id""".format(tuple(self.topusers))
 
 		df = pd.read_sql_query(query, self.conn)
 

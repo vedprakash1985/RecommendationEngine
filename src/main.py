@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 10:48:30
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 02:27:01
+# @Last Modified time: 2021-02-21 02:57:01
 
 # Main Script to run for Questions 1 ans 2 in Outline
 
@@ -111,7 +111,8 @@ def getVenues(config):
 
 	# Get the top k users
 	db = DB(config["DB_path"], top = config["topUsers"])
-	topusers = db.getTopUsers()
+	topusers = db.topusers	
+
 
 	# Get the user-item matrix, with the row column mapping
 	[row_col_map, X] = db.getUserItemMatrix()
