@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 18:33:51
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 06:56:12
+# @Last Modified time: 2021-02-21 07:07:21
 
 
 # Main class to read the DB and obtain processed dataframe
@@ -66,6 +66,7 @@ class DB:
 	def getSocialUsers(self):
 
 		query = """select first_user_id as user_id, count(distinct second_user_id) as cnt  from socialgraph
+						where first_user_id in (select distinct user_id from checkins)
 						group by first_user_id
 						order by cnt desc
 						limit {}""".format(self.top)
