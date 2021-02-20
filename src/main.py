@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 10:48:30
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 02:21:33
+# @Last Modified time: 2021-02-21 02:27:01
 
 # Main Script to run for Questions 1 ans 2 in Outline
 
@@ -18,18 +18,22 @@ from DB import DB
 
 
 
-def savedisk(d_venues, loc):
+def savedisk(d_venue, loc):
 	"""
 	Save the recommendations to disk
 	
 	Args:
-	    d_venues (dict): key is the id of the user, value is a list of the recommended items
-	    loc (str): Path to save the file
-	
-	Returns:
-	    TYPE: Description
+		d_venues (dict): key is the id of the user, value is a list of the recommended items
+		loc (str): Path to save the file
 	"""
+	dfOut = pd.DataFrame()
 
+	for k, value in d_venue.items():
+		df1 = pd.DataFrame(value, columns=["venue_id"])
+		df1["user_id"] = k
+		dfOut = pd.concat([dfOut, df1])
+
+	dfOut.to_csv(loc, index = False)
 
 	return None
 
@@ -39,15 +43,15 @@ def recommenMatrix(S, X):
 
 	
 	Args:
-	    S (scipy.sparse.csr.csr_matrix): Similarity matrix, size n1 x n, where 
-	    	i) n1 is the number of users we are interested to recommend items
-	    	ii) n is the total number of users in the given universe
-	    X (scipy.sparse.csr.csr_matrix): User-item matrix, size n x m where
-	    	i) n is the total number of users in the given universe
-	    	ii) m is the total number of items in the given universe
+		S (scipy.sparse.csr.csr_matrix): Similarity matrix, size n1 x n, where 
+			i) n1 is the number of users we are interested to recommend items
+			ii) n is the total number of users in the given universe
+		X (scipy.sparse.csr.csr_matrix): User-item matrix, size n x m where
+			i) n is the total number of users in the given universe
+			ii) m is the total number of items in the given universe
 	
 	Returns:
-	    R (scipy.sparse.csr.csr_matrix): Size n1 x m, which predicts the preference of the n1 users we are interested in 
+		R (scipy.sparse.csr.csr_matrix): Size n1 x m, which predicts the preference of the n1 users we are interested in 
 	"""
 
 	# For the normalization factor in the recommendation scroes
@@ -62,25 +66,25 @@ def recommenMatrix(S, X):
 
 
 def __get_key(val, my_dict):
-    for key, value in my_dict.items():
-         if val == value:
-             return key
-        
-    return None
+	for key, value in my_dict.items():
+		 if val == value:
+			 return key
+		
+	return None
 
 def getNewVenues(R, Y, k, d, topusers):
 	"""
 	Get the new venues for all the top users
 	
 	Args:
-	    R (scipy.sparse.csr.csr_matrix): The user-recommendation matrix for top k users
-	    Y (scipy.sparse.csr.csr_matrix): User-item matrix for the top k users
-	    k (int): Number of items to recommend from matrix R, items already rated by the user will be removed.
-	    d (dict): Dictionary of row and column mappings for user-item matrix 
-	    topusers (list): User ids of the top k users, this is how the rows of matrices R and Y are labelled
+		R (scipy.sparse.csr.csr_matrix): The user-recommendation matrix for top k users
+		Y (scipy.sparse.csr.csr_matrix): User-item matrix for the top k users
+		k (int): Number of items to recommend from matrix R, items already rated by the user will be removed.
+		d (dict): Dictionary of row and column mappings for user-item matrix 
+		topusers (list): User ids of the top k users, this is how the rows of matrices R and Y are labelled
 	
 	Returns:
-	    new_venues (dict): key is the id of the user, value is a list of the recommended items
+		new_venues (dict): key is the id of the user, value is a list of the recommended items
 	"""
 	new_venues = {} 
 
