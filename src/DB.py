@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 18:33:51
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 04:42:06
+# @Last Modified time: 2021-02-21 06:56:12
 
 
 # Main class to read the DB and obtain processed dataframe
@@ -16,7 +16,7 @@ class DB:
 	def __init__(self, filename, top =10):
 		"""
 		Args:
-			filename (str): D
+			filename (str): Local path of DB
 			top (int, optional): Description
 		"""
 		self.top = 10
@@ -62,6 +62,19 @@ class DB:
 		df = pd.read_sql_query(query, self.conn)
 
 		self.topusers = df["user_id"].tolist()
+
+	def getSocialUsers(self):
+
+		query = """select first_user_id as user_id, count(distinct second_user_id) as cnt  from socialgraph
+						group by first_user_id
+						order by cnt desc
+						limit {}""".format(self.top)
+
+		df = pd.read_sql_query(query, self.conn)
+
+		topSocialusers = df["user_id"].tolist()
+
+		return topSocialusers
 
 	def getrating(self):
 		"""
