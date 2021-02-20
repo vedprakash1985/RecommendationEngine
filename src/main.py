@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 10:48:30
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 07:37:00
+# @Last Modified time: 2021-02-21 07:42:03
 
 # Main Script to run for Questions 1 ans 2 in Outline
 
@@ -238,6 +238,9 @@ def analyseSocialUsers(config):
 	df_social = db.getcheckinsSocialUsers(socialusers, config["start_date"])
 	df_social.to_csv(config["loc_social_checkins"], index = False)
 
+
+	# Close the DB connection
+	db.close()
 
 	return None
 
