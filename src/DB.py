@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 18:33:51
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 02:54:40
+# @Last Modified time: 2021-02-21 04:11:06
 
 
 # Main class to read the DB and obtain processed dataframe
@@ -91,7 +91,7 @@ class DB:
 		"""
 		Get the friends of all top users with their weights
 		Returns:
-		    df (pandas dataframe): Columns are top_user_id, friend_id, weight
+			df (pandas dataframe): Columns are top_user_id, friend_id, weight
 		"""
 
 		query = """select first_user_id as top_user_id, second_user_id as friend_id, count(*) 
@@ -131,11 +131,40 @@ class DB:
 		d["col"] = col_map
 
 		for index, row in df.iterrows():
-		    X[d["row"][row["user_id"]], d["col"][row["venue_id"]]] = row["Rating"]
+			X[d["row"][row["user_id"]], d["col"][row["venue_id"]]] = row["Rating"]
 
 		X = X.tocsr()  # Allow efficient row slicing
 
 		return [d,X]
+
+
+	def getSocialSimilarityMatrix(self, column_map):
+		"""
+		Get the similarity matrix based on the social network graph for the top users
+		
+		Returns:
+		    S (scipy.sparse.csr.csr_matrix): Similarity matrix, Size k x n, where
+		    	i) k is the number of top users
+		    	ii) n is the total number of users in the given universe
+		
+		Args:
+		    column_map (dict): Mapping of users to index of S
+		"""
+
+		df = self.getSocialNetwork()
+
+		S = lil_matrix((len(self.topusers), len(column_map)))
+
+		for index, row in df.iterrows():
+			if row["friend_id"] in column_map.keys():
+				S[ self.topusers.index(row["top_user_id"]), column_map[row["friend_id"]] ] = row["weight"]
+			else:
+				pass
+				# print("User %i did not make any checkins" %row["friend_id"] )
+
+		S = S.tocsr()  
+
+		return S
 
 	def close(self):
 		"""

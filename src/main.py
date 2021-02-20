@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 10:48:30
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 02:57:01
+# @Last Modified time: 2021-02-21 04:03:17
 
 # Main Script to run for Questions 1 ans 2 in Outline
 
@@ -117,9 +117,6 @@ def getVenues(config):
 	# Get the user-item matrix, with the row column mapping
 	[row_col_map, X] = db.getUserItemMatrix()
 
-	# Close the DB connection
-	db.close()
-
 	# Construct Similarity matrix for top users based on cosine similarity of user-item matrix
 	index_top = [row_col_map["row"][x] for x in topusers] # index for the top users
 	X_top = X[index_top] # user-item matrix for the top users
@@ -127,8 +124,15 @@ def getVenues(config):
 	# Compute the cosine similarity matrix
 	S = cosine_similarity(X_top, X, dense_output=False)
 
+	# Get the similarity matrix based on social network
+	S_social = db.getSocialSimilarityMatrix(row_col_map["row"])
+
+	# Close the DB connection
+	db.close()
+
 	# Get the recommendation matrix
 	R_cosine = recommenMatrix(S, X)
+	R_social = recommenMatrix(S_social, X)
 
 
 	# Get the recommendations for each user
