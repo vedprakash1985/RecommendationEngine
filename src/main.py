@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 10:48:30
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 04:24:37
+# @Last Modified time: 2021-02-21 06:39:40
 
 # Main Script to run for Questions 1 ans 2 in Outline
 
@@ -105,8 +105,15 @@ def getVenues(config):
 	"""
 	Get a basket of recommendation for top users
 	Using the user-user collaborative filtering method
+	
 	Args:
-		config (dict): Config file params
+	    config (dict): Config file params
+	
+	Returns:
+	    [X, topusers, row_col_map] (scipy.sparse.csr.csr_matrix, list, dict)
+	    	1) X is the user-item matrix
+	    	2) topusers : ontains the ids of the top users
+	    	3) row_col_map: row and column mappings for matrix X
 	"""
 
 	# Get the top k users
@@ -145,9 +152,56 @@ def getVenues(config):
 	# Format and save to disk
 	savedisk(new_venues_social, config['loc_recom_social_venues'])
 
+	return [X, topusers, row_col_map]
+
+def getRecomProbability(X, topusers, d):
+	"""
+	Get the recommendations based on probabilty scores
+	Args:
+		X (scipy.sparse.csr.csr_matrix): User-item matrix
+		topusers (list): Contains the ids of the top users
+		d (dict): row and column mappings for matrix X
+	
+	Returns:
+		d_user_item_prob (dict): TODO
+	"""
+	d_user_item_prob = {}
+	
+	# Convert boolean
+	X[X.nonzero()]= 1
+	m = X.shape[1]
+
+	# Get the column sum of each column of X
+	c = X.sum(axis=0)
+	c = c/m
+
+	for u in topusers:
+		user_index = d["row"][u]
+		prob_dict = {}
+
+		for i in range(m):  # loop thorugh all items 
+			x_i = X[:,i]
+			ind_xi = x_i.nonzero()[0]
+
+			prob_i = c[0,i]
+
+			items = X[user_index].nonzero()[1]
+			prob_x = np.prod(c[0, items])
+
+			cond_prod =1
+			for j in items:
+				x_j = X[:,j]
+				prob_x_i = (x_j[ind_xi].sum() + 1) / len(ind_xi)
+				cond_prod = cond_prod *prob_x_i
+
+			recomm_prod = (cond_prod * prob_i) / prob_x
+
+			prob_dict[__get_key(i, d["col"])] = recomm_prod
+
+		d_user_item_prob[u] = prob_dict
 
 
-	return None
+	return d_user_item_prob 
 
 def getRecommendation(config):
 	"""Summary
@@ -157,7 +211,13 @@ def getRecommendation(config):
 	"""
 
 	# Get a basket of recommendation for top users based on 1) similarity between users, 2) similarity based on social network graph
-	getVenues(config)
+	[X, topusers, d] = getVenues(config)
+
+	# Predict the probability via Bayes Theorem
+	out_d = getRecomProbability(X, topusers, d)
+
+	import pdb; pdb.set_trace()  # breakpoint 0e6669a7 //
+
 
 	return None
 
