@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 18:33:51
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 07:07:21
+# @Last Modified time: 2021-02-21 07:22:49
 
 
 # Main class to read the DB and obtain processed dataframe
@@ -76,6 +76,21 @@ class DB:
 		topSocialusers = df["user_id"].tolist()
 
 		return topSocialusers
+
+	def getcheckinsSocialUsers(self, topSocialusers, start_date):
+
+		d = {}
+		d["start"] = start_date
+		d["socialusers"] = tuple(topSocialusers)
+
+		query = """select * from checkins
+					where created_at >= '{start}'
+					and user_id in {socialusers}""".format(**d)
+
+
+		df = pd.read_sql_query(query, self.conn)
+
+		return df
 
 	def getrating(self):
 		"""
