@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 10:48:30
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 06:39:40
+# @Last Modified time: 2021-02-21 07:37:00
 
 # Main Script to run for Questions 1 ans 2 in Outline
 
@@ -204,8 +204,8 @@ def getRecomProbability(X, topusers, d):
 	return d_user_item_prob 
 
 def getRecommendation(config):
-	"""Summary
-	
+	"""
+	Get the recommendations based on user similarity, social network and Bayes Theorem
 	Args:
 		config (dict): Config file params
 	"""
@@ -216,12 +216,30 @@ def getRecommendation(config):
 	# Predict the probability via Bayes Theorem
 	out_d = getRecomProbability(X, topusers, d)
 
-	import pdb; pdb.set_trace()  # breakpoint 0e6669a7 //
-
+	# TODO: Testing: Broke here for one of the terminal
 
 	return None
 
+def analyseSocialUsers(config):
+	"""
+	Analsye the social users
+	
+	Args:
+	    config (dict): Config file params
+	
+	"""
 
+	db = DB(config["DB_path"], top = config["topUsers"])
+
+	# Get the social users
+	socialusers = db.getSocialUsers()
+
+	# Get the checks of the social users
+	df_social = db.getcheckinsSocialUsers(socialusers, config["start_date"])
+	df_social.to_csv(config["loc_social_checkins"], index = False)
+
+
+	return None
 
 
 if __name__ == "__main__":
@@ -235,4 +253,7 @@ if __name__ == "__main__":
 		config = json.load(f)
 
 
-	getRecommendation(config)
+	# getRecommendation(config)
+	analyseSocialUsers(config)
+
+
