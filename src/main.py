@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 10:48:30
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-20 10:12:50
+# @Last Modified time: 2021-02-21 02:21:33
 
 # Main Script to run for Questions 1 ans 2 in Outline
 
@@ -16,6 +16,22 @@ from sklearn.metrics.pairwise import cosine_similarity
 # Import from local modules
 from DB import DB
 
+
+
+def savedisk(d_venues, loc):
+	"""
+	Save the recommendations to disk
+	
+	Args:
+	    d_venues (dict): key is the id of the user, value is a list of the recommended items
+	    loc (str): Path to save the file
+	
+	Returns:
+	    TYPE: Description
+	"""
+
+
+	return None
 
 def recommenMatrix(S, X):
 	"""
@@ -45,15 +61,48 @@ def recommenMatrix(S, X):
 	return R
 
 
+def __get_key(val, my_dict):
+    for key, value in my_dict.items():
+         if val == value:
+             return key
+        
+    return None
+
+def getNewVenues(R, Y, k, d, topusers):
+	"""
+	Get the new venues for all the top users
+	
+	Args:
+	    R (scipy.sparse.csr.csr_matrix): The user-recommendation matrix for top k users
+	    Y (scipy.sparse.csr.csr_matrix): User-item matrix for the top k users
+	    k (int): Number of items to recommend from matrix R, items already rated by the user will be removed.
+	    d (dict): Dictionary of row and column mappings for user-item matrix 
+	    topusers (list): User ids of the top k users, this is how the rows of matrices R and Y are labelled
+	
+	Returns:
+	    new_venues (dict): key is the id of the user, value is a list of the recommended items
+	"""
+	new_venues = {} 
+
+	for i in range(len(topusers)):
+		r = R.getrow(i).toarray()[0].ravel()
+		ind_r = np.argpartition(r, -k)[-k:]
+
+		y = Y.getrow(i).toarray()[0].ravel()
+		ind_y = y.nonzero()[0]	
+
+		places = set(ind_r) - set(ind_y)
+
+		new_venues[topusers[i]]  = [__get_key(x,d["col"]) for x in places]
+
+	return new_venues
+
 def getVenues(config):
 	"""
 	Get a basket of recommendation for top users
 	Using the user-user collaborative filtering method
 	Args:
 		config (dict): Config file params
-	
-	Returns:
-		TYPE: Description
 	"""
 
 	# Get the top k users
@@ -77,23 +126,23 @@ def getVenues(config):
 	R_cosine = recommenMatrix(S, X)
 
 
-	# Get the recommendation for each user
-	df_venues = getNewVenues(R_cosine, X_top)
+	# Get the recommendations for each user
+	new_venues = getNewVenues(R_cosine, X_top, config["numberRecommendation"], row_col_map, topusers)
 
-	return df_venues
+	# Format and save to disk
+	savedisk(new_venues, config['loc_recom_venues'])
+
+	return None
 
 def getRecommendation(config):
 	"""Summary
 	
 	Args:
 		config (dict): Config file params
-	
-	Returns:
-		TYPE: Description
 	"""
 
-	# Get a basket of recommendation for top users
-	df_venues= getVenues(config)
+	# Get a basket of recommendation for top users based on 1) similarity between users, 2) similarity based on social network graph
+	getVenues(config)
 
 	return None
 

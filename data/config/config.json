@@ -1,4 +1,6 @@
 {
 	"topUsers": 10,
-	"DB_path": "../data/fsdata.db"
+	"DB_path": "../data/fsdata.db",
+	"numberRecommendation": 20,
+	"loc_recom_venues": "../data/output/recom_venues.csv"
 }
