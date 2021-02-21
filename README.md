@@ -37,6 +37,7 @@ Place the file in the data folder, or anywhere as its location will be specified
     | loc_recom_social_venues   | Path to save the basket of venues for the top users with most checkins based on their friends.  <br> Type: Str     |
     | loc_recom_prob   | Path to save the basket of venues for the top users with most checkins using bayesian technique. This will produce probability scores for each recommendations.  <br> Type: Str     |
     | loc_social_checkins   | Path to save the user checkins for the top "social "users. <br> Type: Str     |
+    | loc_social_closeness   | Path to save the friends of the top "social "users, together with how close they are. <br> Type: Str     |
     | start_date   | Date in 'YYYY-MM-DD' format. Consider all user checkins from this date onwards for the top "social "users.  <br> Type: Str     |
     
 
@@ -70,3 +71,9 @@ The following files will be saved.
     2. Use this file and update the Tableau dashboard provided in `data/output/social_users_checkins.twbx`.
     3. The map of the user checkins obtained from the Tableau dashboard is shown here for reference.
     ![alt text](https://github.com/vedprakash1985/RecommendationEngine/blob/master/data/image/checkin_map.png?raw=true)
+    
+ 1. `data/output/social_taste.csv`
+     1. For the top "social "users, this contains all their friends and how close they are.
+     2. We use the jaccard similarity score between the venues visited by their friends to compute the closeness between them.
+     3. This score is between 0 and 1, the higher the score, the more close they are.
+     4. Columns of the file are `user_id`, `friend_id` and the closeness between the user and the friend. The higher the distance, the closer they are.
