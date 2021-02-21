@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 18:33:51
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 21:57:47
+# @Last Modified time: 2021-02-21 22:02:53
 
 
 # Main class to read the DB and run SQL queries
@@ -66,6 +66,7 @@ class DB:
 	def getSocialUsers(self):
 		"""
 		Get the user_ids of the social users, from the unvierse of ids who have visited at least one place.
+
 		Returns:
 		    topSocialusers (list): User-ids of the social users
 		"""
@@ -84,6 +85,7 @@ class DB:
 	def getcheckinsSocialUsers(self, topSocialusers, start_date):
 		"""
 		Get the venues visited by a set of users from start_date
+
 		Args:
 		    topSocialusers (list): User_id of the users who we need the venue which they have visited
 		    start_date (str): 'YYYY-MM-DD' date format
@@ -148,6 +150,7 @@ class DB:
 		"""
 		Get the user id and all ratings of all places visited.
 		For cases where user gives multiple ratings to the same venue, the average of these ratings is used. 
+
 		Returns:
 			df (pandas dataframe): Columns are user_id, venue_id and (Average) Rating
 		"""
@@ -172,6 +175,7 @@ class DB:
 	def getSocialNetwork(self):
 		"""
 		Get the friends of all top users with their weights
+		
 		Returns:
 			df (pandas dataframe): Columns are top_user_id, friend_id, weight
 		"""
@@ -226,7 +230,7 @@ class DB:
 
 		Args:
 		    column_map (dict): Mapping of users to index of S
-		    
+
 		Returns:
 		    S (scipy.sparse.csr.csr_matrix): Similarity matrix, Size k x n, where
 		    	i) k is the number of top users
