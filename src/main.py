@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 10:48:30
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 21:58:40
+# @Last Modified time: 2021-02-21 22:01:42
 
 # Main Script to run for Questions 1 and 2 in Outline of readme file
 
@@ -229,6 +229,7 @@ def getRecomProbability(X, topusers, d, loc):
 def getRecommendation(config):
 	"""
 	Get the recommendations based on user similarity, social network and Bayes Theorem
+
 	Args:
 		config (dict): Config file params
 	"""
@@ -245,6 +246,7 @@ def getRecommendation(config):
 def getClosenessFriends(df_venue, df_friends, loc):
 	"""
 	Get the closeness of the users and their friends based on jaccard similarity
+	
 	Args:
 	    df_venue (pd.DataFrame): user and their venue visited
 	    df_friends (pd.DataFrame): The users and their friends
