@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 10:48:30
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 07:42:03
+# @Last Modified time: 2021-02-21 15:38:46
 
 # Main Script to run for Questions 1 ans 2 in Outline
 
@@ -179,7 +179,8 @@ def getRecomProbability(X, topusers, d):
 		user_index = d["row"][u]
 		prob_dict = {}
 
-		for i in range(m):  # loop thorugh all items 
+		# for i in range(m): loop thorugh all items 
+		for i in range(10):  # loop thorugh sample items; testing only
 			x_i = X[:,i]
 			ind_xi = x_i.nonzero()[0]
 
@@ -191,7 +192,7 @@ def getRecomProbability(X, topusers, d):
 			cond_prod =1
 			for j in items:
 				x_j = X[:,j]
-				prob_x_i = (x_j[ind_xi].sum() + 1) / len(ind_xi)
+				prob_x_i = (x_j[ind_xi].sum() + 1) / (len(ind_xi)+m+1)
 				cond_prod = cond_prod *prob_x_i
 
 			recomm_prod = (cond_prod * prob_i) / prob_x
@@ -256,7 +257,7 @@ if __name__ == "__main__":
 		config = json.load(f)
 
 
-	# getRecommendation(config)
-	analyseSocialUsers(config)
+	getRecommendation(config)
+	# analyseSocialUsers(config)
 
 
