@@ -53,4 +53,20 @@ Place the file in the data folder, or anywhere as its location will be specified
 ## Output
 The following files will be saved.
 
-1. 
+1. `data\output\recom_venues.csv`
+    1. For the top users with most checkins, this is the basket of venues based on user-user similarity
+    2. Columns are `user_id`, and `venue_id` of the places recommended.
+    
+1. `data/output/recom_social_venues.csv`
+    1. For the top users with most checkins, this is the basket of venues based on their friends (Similarity matrix form the social network)
+    2. Columns are `user_id`, and `venue_id` of the places recommended.
+
+1. `data/output/recom_prob_venues.csv`
+    1. For the top users with most checkins, this is the basket of venues using Bayesian technique. This will produce probability scores for each recommendations (using Bayes Theorem).
+    2. Columns are `user_id`, `venue_id` of the places recommended together with the corresponding `probability`.
+
+1. `data/output/social_checkins.csv`
+    1. For the top "social "users, this contains all the user checkins based on the timeperiod.
+    2. Use this file and update the Tableau dashboard provided in `data/output/social_users_checkins.twbx`.
+    3. The map of the user checkins obtained from the Tableau dashboard is shown here for reference.
+    ![alt text](https://github.com/vedprakash1985/RecommendationEngine/blob/master/data/image/checkin_map.png?raw=true)
