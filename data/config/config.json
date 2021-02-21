@@ -6,5 +6,6 @@
 	"loc_recom_social_venues" : "../data/output/recom_social_venues.csv",
 	"loc_recom_prob": "../data/output/recom_prob_venues.csv",
 	"loc_social_checkins": "../data/output/social_checkins.csv",
+	"loc_social_closeness": "../data/output/social_taste.csv",
 	"start_date": "2012-01-01"
 }
