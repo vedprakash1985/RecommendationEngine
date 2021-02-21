@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 10:48:30
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 16:29:50
+# @Last Modified time: 2021-02-21 20:03:54
 
 # Main Script to run for Questions 1 ans 2 in Outline
 
@@ -63,6 +63,21 @@ def recommenMatrix(S, X):
 
 	
 	return R
+
+def jaccard_similarity(list1, list2):
+    """
+    Computes the jaccard similarity between list1 and list2
+    Args:
+        list1 (list):
+        list2 (list):
+    
+    Returns:
+        float: accard similarity
+    """
+
+    s1 = set(list1)
+    s2 = set(list2)
+    return float(len(s1.intersection(s2)) / len(s1.union(s2)))
 
 
 def __get_key(val, my_dict):
@@ -264,7 +279,7 @@ if __name__ == "__main__":
 		config = json.load(f)
 
 
-	getRecommendation(config)
-	# analyseSocialUsers(config)
+	# getRecommendation(config)
+	analyseSocialUsers(config)
 
 
