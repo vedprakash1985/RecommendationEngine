@@ -11,7 +11,7 @@ Build Simple Recommendation Engine and Visualization
 1. For the top 10 more “social” users (with more friends),
     1.  Draw the path (with map) of a week/month of users checkins,
     2.  List your friends and how close they are in terms of “taste” (based on venues visited
-and ranked)
+and ranked).
 
 ## Datasets
 Obtain the sqlite dataset from the following link: https://mltestpublicdata.s3-ap-southeast-1.amazonaws.com/fsdata.db.zip
@@ -21,8 +21,8 @@ Place the file in the data folder, or anywhere as its location will be specified
 ## Programming language
 
 * Python 3.6
-* Packages used
-    * Please use the ```requirements.txt``` to create the virtual environment.
+* Packages used:
+    * Please use ```requirements.txt``` to create the virtual environment.
 
 ## Run Program
 
@@ -35,7 +35,7 @@ Place the file in the data folder, or anywhere as its location will be specified
     | numberRecommendation     | The number of items to choose from the recommendation matrix. <br> Type: Int |
     | loc_recom_venues   | Path to save the basket of venues for the top users with most checkins using user-user similarity. <br> Type: Str     |
     | loc_recom_social_venues   | Path to save the basket of venues for the top users with most checkins based on their friends.  <br> Type: Str     |
-    | loc_recom_prob   | Path to save the basket of venues for the top users with most checkins using bayesian technique. This will produce probability scores for each recommendations.  <br> Type: Str     |
+    | loc_recom_prob   | Path to save the basket of venues for the top users with most checkins using Bayesian technique. This will produce probability scores for each recommendations.  <br> Type: Str     |
     | loc_social_checkins   | Path to save the user checkins for the top "social "users. <br> Type: Str     |
     | loc_social_closeness   | Path to save the friends of the top "social "users, together with how close they are. <br> Type: Str     |
     | start_date   | Date in 'YYYY-MM-DD' format. Consider all user checkins from this date onwards for the top "social "users.  <br> Type: Str     |
@@ -44,23 +44,25 @@ Place the file in the data folder, or anywhere as its location will be specified
 2. **Run Code**.  
     The general syntax is
     ```python
-    python src\main.py -config < path to configuration file >
+    cd src
+    python main.py -config < path to configuration file >
     ```
     For example, in this case, it will be
     ```python
-    python src\main.py -config data\config\config.json
+    cd src
+    python main.py -config ../data/config/config.json
     ```
 
 ## Output
 The following files will be saved.
 
 1. `data\output\recom_venues.csv`
-    1. For the top users with most checkins, this is the basket of venues based on user-user similarity
-    2. Columns are `user_id`, and `venue_id` of the places recommended.
+    1. For the top users with most checkins, this is the basket of venues based on user-user similarity.
+    2. Columns are `user_id` and `venue_id` of the places recommended.
     
 1. `data/output/recom_social_venues.csv`
-    1. For the top users with most checkins, this is the basket of venues based on their friends (Similarity matrix form the social network)
-    2. Columns are `user_id`, and `venue_id` of the places recommended.
+    1. For the top users with most checkins, this is the basket of venues based on their friends (Similarity matrix from the social network).
+    2. Columns are `user_id` and `venue_id` of the places recommended.
 
 1. `data/output/recom_prob_venues.csv`
     1. For the top users with most checkins, this is the basket of venues using Bayesian technique. This will produce probability scores for each recommendations (using Bayes Theorem).
