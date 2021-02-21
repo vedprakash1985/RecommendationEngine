@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 10:48:30
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 15:38:46
+# @Last Modified time: 2021-02-21 16:29:50
 
 # Main Script to run for Questions 1 ans 2 in Outline
 
@@ -154,16 +154,18 @@ def getVenues(config):
 
 	return [X, topusers, row_col_map]
 
-def getRecomProbability(X, topusers, d):
+def getRecomProbability(X, topusers, d, loc):
 	"""
 	Get the recommendations based on probabilty scores
+	
 	Args:
-		X (scipy.sparse.csr.csr_matrix): User-item matrix
-		topusers (list): Contains the ids of the top users
-		d (dict): row and column mappings for matrix X
+	    X (scipy.sparse.csr.csr_matrix): User-item matrix
+	    topusers (list): Contains the ids of the top users
+	    d (dict): row and column mappings for matrix X
+	    loc (str): Location to save the recommendations based on probability scores
 	
 	Returns:
-		d_user_item_prob (dict): TODO
+	    Dataframe save to loc, where columns of dataframe are ['user_id', 'venue_id', 'probability'],
 	"""
 	d_user_item_prob = {}
 	
@@ -180,7 +182,7 @@ def getRecomProbability(X, topusers, d):
 		prob_dict = {}
 
 		# for i in range(m): loop thorugh all items 
-		for i in range(10):  # loop thorugh sample items; testing only
+		for i in range(15):  # loop thorugh sample items; testing only
 			x_i = X[:,i]
 			ind_xi = x_i.nonzero()[0]
 
@@ -201,8 +203,15 @@ def getRecomProbability(X, topusers, d):
 
 		d_user_item_prob[u] = prob_dict
 
+	# Save to disk
+	df_prob = pd.DataFrame.from_dict(d_user_item_prob).T
+	df_prob.reset_index(inplace=True)
+	df_prob.rename(columns={"index": "user_id"}, inplace=True)
+	df_prob = df_prob.melt(id_vars=["user_id"], var_name= "venue_id", value_name= "probability")
+	df_prob.to_csv(loc, index = False)
 
-	return d_user_item_prob 
+
+	return None
 
 def getRecommendation(config):
 	"""
@@ -215,9 +224,7 @@ def getRecommendation(config):
 	[X, topusers, d] = getVenues(config)
 
 	# Predict the probability via Bayes Theorem
-	out_d = getRecomProbability(X, topusers, d)
-
-	# TODO: Testing: Broke here for one of the terminal
+	getRecomProbability(X, topusers, d, config['loc_recom_prob'])
 
 	return None
 
