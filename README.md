@@ -54,10 +54,11 @@ Place the file in the data folder, or anywhere as its location will be specified
     ```
 
 ## Output
-The following files will be saved.
+The following files will be saved to disk, based on the parameters in the configuration file.  
+These output will answer the questions mentined in the outline.
 
 1. `data\output\recom_venues.csv`
-    1. For the top users with most checkins, this is the basket of venues based on user-user similarity.
+    1. For the top users with most checkins, this is the basket of recommended venues based on user-user similarity via cosine similarity.
     2. Columns are `user_id` and `venue_id` of the places recommended.
     
 1. `data/output/recom_social_venues.csv`
@@ -76,6 +77,6 @@ The following files will be saved.
     
  1. `data/output/social_taste.csv`
      1. For the top "social "users, this contains all their friends and how close they are.
-     2. We use the jaccard similarity score between the venues visited by their friends to compute the closeness between them.
+     2. We use the Jaccard similarity score between the venues visited by their friends to compute the closeness between them.
      3. This score is between 0 and 1, the higher the score, the more close they are.
      4. Columns of the file are `user_id`, `friend_id` and the closeness between the user and the friend. The higher the distance, the closer they are.
