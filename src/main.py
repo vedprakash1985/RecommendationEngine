@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 10:48:30
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 20:03:54
+# @Last Modified time: 2021-02-21 20:25:20
 
 # Main Script to run for Questions 1 ans 2 in Outline
 
@@ -243,6 +243,32 @@ def getRecommendation(config):
 
 	return None
 
+
+def getClosenessFriends(df_venue, df_friends, loc):
+	"""
+	Get the closeness of the users and their friends based on jaccard similarity
+	Args:
+	    df_venue (pd.DataFrame): user and their venue visited
+	    df_friends (pd.DataFrame): The users and their friends
+	    loc (str): Path to save the output
+	
+	"""
+
+	s = df_venue.groupby(by = 'user_id')['venue_id'].apply(list)
+	d_user_venues = dict(s)
+	df_friends["venue_first_user"] = df_friends["first_user_id"].apply(lambda x: d_user_venues.get(x, []))
+	df_friends["venue_second_user"] = df_friends["second_user_id"].apply(lambda x: d_user_venues.get(x, []))
+
+	df_friends["Distance"] = df_friends.apply(lambda row: jaccard_similarity(row["venue_first_user"], row["venue_second_user"]), axis=1)
+
+	# Format the output
+	df_friends.drop(columns=["venue_first_user", "venue_second_user"], inplace=True)
+	df_friends.rename(columns={'first_user_id': 'user_id', 'second_user_id': 'friend_id'}, inplace=True)
+
+	df_friends.to_csv(loc, index = False)
+
+	return None
+
 def analyseSocialUsers(config):
 	"""
 	Analsye the social users
@@ -261,9 +287,18 @@ def analyseSocialUsers(config):
 	df_social = db.getcheckinsSocialUsers(socialusers, config["start_date"])
 	df_social.to_csv(config["loc_social_checkins"], index = False)
 
+	# Get the friends of the social users
+	df_friends = db.getFriends(tuple(socialusers))
+
+	# Get the venue visited by social users and all friends
+	all_ids = tuple(set(df_friends["first_user_id"].unique()).union(df_friends["second_user_id"].unique()))
+	df_venue  = db.getVenueIds(all_ids)
 
 	# Close the DB connection
 	db.close()
+
+	# Compute the similarity between social users and their friends
+	getClosenessFriends(df_venue, df_friends, config['loc_social_closeness'])
 
 	return None
 
