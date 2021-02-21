@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 18:33:51
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 07:22:49
+# @Last Modified time: 2021-02-21 19:34:11
 
 
 # Main class to read the DB and obtain processed dataframe
@@ -91,6 +91,39 @@ class DB:
 		df = pd.read_sql_query(query, self.conn)
 
 		return df
+
+	def getFriends(self, users):
+		"""
+		Get all the friends of users
+		Args:
+		    users (tuple): user_id of users to get friends
+		"""
+
+		query = """select * from socialgraph
+					where  first_user_id in {}
+					group by first_user_id, second_user_id""".format(users)
+
+		df = pd.read_sql_query(query, self.conn)
+
+		return df
+
+	def getVenueIds(self, users):
+		"""
+		Get all the venues visited by users
+		
+		Args:
+		    users (tuple): user id of users
+		"""
+
+		query = """select user_id, venue_id from checkins
+					where user_id in {}
+					group by user_id, venue_id""".format(users)
+
+		df = pd.read_sql_query(query, self.conn)
+
+		return df
+
+
 
 	def getrating(self):
 		"""
