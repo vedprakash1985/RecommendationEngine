@@ -2,10 +2,10 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 18:33:51
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 19:34:11
+# @Last Modified time: 2021-02-21 21:57:47
 
 
-# Main class to read the DB and obtain processed dataframe
+# Main class to read the DB and run SQL queries
 import sqlite3
 import pandas as pd
 import numpy as np
@@ -19,7 +19,7 @@ class DB:
 			filename (str): Local path of DB
 			top (int, optional): Description
 		"""
-		self.top = 10
+		self.top = top
 
 		# Create the connection to DB
 		self.conn = sqlite3.connect(filename)
@@ -31,7 +31,7 @@ class DB:
 	def getTopUsers(self): 
 		"""
 		Get the top users 
-		This is based on checkins, but home town location is dropped, 
+		This is based on checkins, but home town locations are dropped, 
 		i.e. a check-in is valid only when not in home-town, based on lat long coordinates
 		
 		Returns:
@@ -64,7 +64,11 @@ class DB:
 		self.topusers = df["user_id"].tolist()
 
 	def getSocialUsers(self):
-
+		"""
+		Get the user_ids of the social users, from the unvierse of ids who have visited at least one place.
+		Returns:
+		    topSocialusers (list): User-ids of the social users
+		"""
 		query = """select first_user_id as user_id, count(distinct second_user_id) as cnt  from socialgraph
 						where first_user_id in (select distinct user_id from checkins)
 						group by first_user_id
@@ -78,7 +82,15 @@ class DB:
 		return topSocialusers
 
 	def getcheckinsSocialUsers(self, topSocialusers, start_date):
-
+		"""
+		Get the venues visited by a set of users from start_date
+		Args:
+		    topSocialusers (list): User_id of the users who we need the venue which they have visited
+		    start_date (str): 'YYYY-MM-DD' date format
+		
+		Returns:
+		    df (pd.DataFrame): The venue_ids of the places visited by the users, together with the  (lat,long) coordinates
+		"""
 		d = {}
 		d["start"] = start_date
 		d["socialusers"] = tuple(topSocialusers)
@@ -95,8 +107,12 @@ class DB:
 	def getFriends(self, users):
 		"""
 		Get all the friends of users
+		
 		Args:
 		    users (tuple): user_id of users to get friends
+		
+		Returns:
+			df (pd.DataFrame): First column is the user_id, second column is the user_id of the friend.
 		"""
 
 		query = """select * from socialgraph
@@ -113,6 +129,9 @@ class DB:
 		
 		Args:
 		    users (tuple): user id of users
+		
+		Returns:
+		    df (pd.DataFrame): First column is the user_id, second column is the venue_id of the place visited
 		"""
 
 		query = """select user_id, venue_id from checkins
@@ -130,7 +149,7 @@ class DB:
 		Get the user id and all ratings of all places visited.
 		For cases where user gives multiple ratings to the same venue, the average of these ratings is used. 
 		Returns:
-			df (pandas dataframe): Columns are user_id, venue_id and rating
+			df (pandas dataframe): Columns are user_id, venue_id and (Average) Rating
 		"""
 
 		query = """select C.user_id, C.venue_id , R.Rating
@@ -203,15 +222,17 @@ class DB:
 
 	def getSocialSimilarityMatrix(self, column_map):
 		"""
-		Get the similarity matrix based on the social network graph for the top users
-		
+		Get the similarity matrix based on the social network graph for the top users.
+
+		Args:
+		    column_map (dict): Mapping of users to index of S
+		    
 		Returns:
 		    S (scipy.sparse.csr.csr_matrix): Similarity matrix, Size k x n, where
 		    	i) k is the number of top users
 		    	ii) n is the total number of users in the given universe
 		
-		Args:
-		    column_map (dict): Mapping of users to index of S
+
 		"""
 
 		df = self.getSocialNetwork()

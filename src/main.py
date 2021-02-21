@@ -2,9 +2,9 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 10:48:30
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 20:39:49
+# @Last Modified time: 2021-02-21 21:58:40
 
-# Main Script to run for Questions 1 ans 2 in Outline
+# Main Script to run for Questions 1 and 2 in Outline of readme file
 
 import pandas as pd 
 import argparse
@@ -41,7 +41,6 @@ def recommenMatrix(S, X):
 	"""
 	Get the recomendation matrix
 
-	
 	Args:
 		S (scipy.sparse.csr.csr_matrix): Similarity matrix, size n1 x n, where 
 			i) n1 is the number of users we are interested to recommend items
@@ -68,8 +67,8 @@ def jaccard_similarity(list1, list2):
     """
     Computes the jaccard similarity between list1 and list2
     Args:
-        list1 (list):
-        list2 (list):
+        list1 (list),
+        list2 (list).
     
     Returns:
         float: accard similarity
@@ -172,6 +171,7 @@ def getVenues(config):
 def getRecomProbability(X, topusers, d, loc):
 	"""
 	Get the recommendations based on probabilty scores
+	Returns Dataframe which is saved to loc, where columns of dataframe are ['user_id', 'venue_id', 'probability'].
 	
 	Args:
 	    X (scipy.sparse.csr.csr_matrix): User-item matrix
@@ -179,8 +179,6 @@ def getRecomProbability(X, topusers, d, loc):
 	    d (dict): row and column mappings for matrix X
 	    loc (str): Location to save the recommendations based on probability scores
 	
-	Returns:
-	    Dataframe save to loc, where columns of dataframe are ['user_id', 'venue_id', 'probability'],
 	"""
 	d_user_item_prob = {}
 	
