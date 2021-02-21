@@ -2,7 +2,7 @@
 # @Author: Ved Prakash
 # @Date:   2021-02-18 10:48:30
 # @Last Modified by:   Ved Prakash
-# @Last Modified time: 2021-02-21 20:25:20
+# @Last Modified time: 2021-02-21 20:39:49
 
 # Main Script to run for Questions 1 ans 2 in Outline
 
@@ -314,7 +314,7 @@ if __name__ == "__main__":
 		config = json.load(f)
 
 
-	# getRecommendation(config)
+	getRecommendation(config)
 	analyseSocialUsers(config)
 
 
